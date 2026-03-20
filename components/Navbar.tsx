@@ -106,7 +106,7 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Drawer Overlay */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 99, pointerEvents: menuOpen ? 'all' : 'none' }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 101, pointerEvents: menuOpen ? 'all' : 'none' }}>
         {/* Backdrop */}
         <div onClick={() => setMenuOpen(false)} style={{
           position: 'absolute', inset: 0,
