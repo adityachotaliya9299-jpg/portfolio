@@ -1,0 +1,68 @@
+[
+  {
+    "id": "1",
+    "title": "NovaMint NFT Ecosystem",
+    "description": "A production-grade, full-stack NFT minting platform built on Ethereum with 10,000 generative NFTs. Complete ecosystem including UUPS upgradeable smart contracts, Next.js frontend, REST API backend, Discord bot, DAO governance, staking system with VVR reward tokens, and Merkle-tree whitelist minting.",
+    "tags": ["Solidity", "Next.js", "Node.js", "PostgreSQL", "ERC-721A", "Foundry", "Discord.js", "UUPS Proxy"],
+    "github": "https://github.com/adityachotaliya9299-jpg/NovaMint-NFT-Ecosystem",
+    "live": "https://nova-mint-nft-ecosystem.vercel.app",
+    "category": "Blockchain",
+    "featured": true,
+    "createdAt": "2024-01-01"
+  },
+  {
+    "id": "2",
+    "title": "FundChain — Decentralized Crowdfunding",
+    "description": "A fully decentralized crowdfunding platform on Ethereum with DAO governance, multi-token support (ETH/USDC/USDT), NFT badge rewards, milestone-based fund release, IPFS image storage, real-time analytics dashboard, and social sharing features.",
+    "tags": ["Solidity", "Next.js", "TypeScript", "thirdweb", "IPFS", "Foundry", "Recharts", "DAO"],
+    "github": "https://github.com/adityachotaliya9299-jpg/FundChain-App",
+    "live": "https://fund-chain-app.vercel.app",
+    "category": "DeFi",
+    "featured": true,
+    "createdAt": "2024-02-01"
+  },
+  {
+    "id": "3",
+    "title": "Lottery Smart Contract",
+    "description": "A provably fair, on-chain lottery system built with Solidity and Foundry. Features Chainlink VRF for verifiable randomness, automated draws via Chainlink Automation, configurable ticket pricing, and transparent winner selection with full audit trail on Ethereum.",
+    "tags": ["Solidity", "Foundry", "Chainlink VRF", "Chainlink Automation", "EVM"],
+    "github": "https://github.com/adityachotaliya9299-jpg/lottery-smart-contract",
+    "live": "",
+    "category": "Blockchain",
+    "featured": false,
+    "createdAt": "2024-03-01"
+  },
+  {
+    "id": "4",
+    "title": "Upgradable Smart Contract — Foundry",
+    "description": "A deep-dive implementation of the UUPS (Universal Upgradeable Proxy Standard) pattern using Foundry. Demonstrates proxy architecture, storage layout safety, contract versioning, access-controlled upgrade authorization, and full test coverage with forge.",
+    "tags": ["Solidity", "Foundry", "UUPS", "OpenZeppelin", "Proxy Pattern", "EVM"],
+    "github": "https://github.com/adityachotaliya9299-jpg/upgradable-SmartContract-Foundry",
+    "live": "",
+    "category": "Blockchain",
+    "featured": false,
+    "createdAt": "2024-04-01"
+  },
+  {
+    "id": "5",
+    "title": "DeFi StableCoin Protocol",
+    "description": "An algorithmic, exogenously-collateralized stablecoin pegged to USD. Implements overcollateralized minting with ETH/WBTC, Chainlink price feeds for real-time collateral valuation, automated liquidation engine to maintain solvency, and a health factor system.",
+    "tags": ["Solidity", "Foundry", "DeFi", "Chainlink", "ERC-20", "Liquidation Engine"],
+    "github": "https://github.com/adityachotaliya9299-jpg/DeFi-StableCoin",
+    "live": "",
+    "category": "DeFi",
+    "featured": true,
+    "createdAt": "2024-05-01"
+  },
+  {
+    "id": "6",
+    "title": "Merkle Airdrop System",
+    "description": "A gas-efficient token airdrop system using Merkle trees for cryptographic proof-based claim verification. Supports EIP-712 signed typed data for gasless claiming, prevents double-claiming, and allows off-chain whitelist management with on-chain verification.",
+    "tags": ["Solidity", "Foundry", "Merkle Tree", "EIP-712", "ERC-20", "Airdrop"],
+    "github": "https://github.com/adityachotaliya9299-jpg/Merkle-Airdrop",
+    "live": "",
+    "category": "Blockchain",
+    "featured": false,
+    "createdAt": "2024-06-01"
+  }
+]
