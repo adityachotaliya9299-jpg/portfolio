@@ -34,7 +34,8 @@
 | Fonts | Syne (display) · DM Mono (code) |
 | Email | Nodemailer + Gmail SMTP |
 | OG Image | `@vercel/og` |
-| Storage | JSON flat-files (dev) → Supabase (prod) |
+| Storage | Neon PostgreSQL (serverless) |
+| ORM | @neondatabase/serverless |
 | Deployment | Vercel |
 
 ---
@@ -162,43 +163,44 @@ npm install -g vercel
 vercel --prod
 ```
 
-> ⚠️ **Important:** Vercel's filesystem is ephemeral — data written to `data/*.json` resets on each deploy. For persistent storage, replace JSON files with **Supabase** (free tier).
+> ⚠️ **Important:** Vercel's filesystem is ephemeral — data written to `data/*.json` resets on each deploy. For persistent storage, replace JSON files with **neon.tech** (free tier).
 
 ---
 
-## 🗃️ Upgrading to Supabase (Persistent Storage)
+## 🗃️ Database — Neon PostgreSQL
 
-```bash
-npm install @supabase/supabase-js
-```
+This project uses [Neon](https://neon.tech) as a serverless PostgreSQL backend.
 
-Add to `.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_SERVICE_KEY=your-service-role-key
-```
-
-Run this SQL in Supabase dashboard:
+### Tables
 ```sql
-create table projects (
-  id text primary key,
-  title text, description text,
-  tags text[], github text, live text,
-  category text, featured boolean,
-  created_at date
+CREATE TABLE projects (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  github TEXT NOT NULL,
+  live TEXT DEFAULT '',
+  category TEXT NOT NULL,
+  featured BOOLEAN DEFAULT false,
+  created_at DATE DEFAULT CURRENT_DATE
 );
 
-create table messages (
-  id text primary key,
-  name text, email text,
-  subject text, message text,
-  created_at timestamptz
+CREATE TABLE messages (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
-Then replace `fs.readFileSync` / `fs.writeFileSync` in `pages/api/projects.ts` and `pages/api/messages.ts` with Supabase client calls.
+### Environment Variable
 
----
+Add to `.env.local` and Vercel:
+```env
+DATABASE_URL=postgresql://user:pass@ep-xxx.ap-southeast-1.aws.neon.tech/portfolio?sslmode=require
+```
 
 ## 🏆 Achievements
 
