@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@types/nodemailer": "^7.0.11",
     "@vercel/og": "^0.11.1",
     "bcryptjs": "^3.0.3",
