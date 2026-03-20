@@ -260,7 +260,7 @@ export default function Home({ projects }: Props) {
                 <div className="mono" style={{ fontSize: '0.65rem', color: 'var(--text3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem' }}>
                   🏆 GATE CS Achievements
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
+                <div className="gate-cards">
                   {[
                     { year: 'GATE 2026', air: 'AIR 61', score: '914', marks: '70.9 / 100', institute: 'IIT Guwahati', pdf: '/gate-2026.pdf', highlight: true },
                     { year: 'GATE 2025', air: 'AIR 154', score: '853', marks: '78.64 / 100', institute: 'IIT Roorkee', pdf: '/gate-2025.pdf', highlight: false },
@@ -448,7 +448,7 @@ export default function Home({ projects }: Props) {
             <div style={{ padding: 'clamp(1.5rem,4vw,2.5rem)', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, marginBottom: '2rem' }}>
               <div style={{ display: 'flex', gap: 'clamp(1rem,4vw,2.5rem)', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                 <div style={{ width: 72, height: 90, background: 'linear-gradient(145deg, var(--accent3), var(--accent))', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.9rem', flexShrink: 0, boxShadow: '0 8px 30px rgba(123,47,247,0.25)' }}>📄</div>
-                <div style={{ flex: 1, minWidth: 240 }}>
+                <div style={{ flex: 1, minWidth: 0, width: '100%' }}>
                   <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.85rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <span style={{ padding: '0.18rem 0.6rem', borderRadius: 4, background: 'rgba(5,150,105,0.1)', border: '1px solid rgba(5,150,105,0.25)', color: 'var(--green)', fontSize: '0.68rem', fontWeight: 600 }}>Research Paper</span>
                     <span style={{ padding: '0.18rem 0.6rem', borderRadius: 4, background: 'rgba(123,47,247,0.1)', border: '1px solid rgba(123,47,247,0.25)', color: 'var(--accent3)', fontSize: '0.68rem', fontWeight: 600 }}>AI / ML</span>
@@ -649,6 +649,12 @@ export default function Home({ projects }: Props) {
           grid-template-columns: repeat(3, 1fr);
           gap: 1.25rem;
         }
+
+        .gate-cards {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.85rem;
+        }
         @media (max-width: 1000px) {
           .services-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -736,6 +742,12 @@ export default function Home({ projects }: Props) {
           }
           .hero-grid {
             padding: 1rem 0;
+          }
+          .gate-cards {
+            grid-template-columns: 1fr;
+          }
+          .gate-cards > div {
+            min-width: 0;
           }
         }
 
