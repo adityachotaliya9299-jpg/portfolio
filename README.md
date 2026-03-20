@@ -2,7 +2,7 @@
 
 > Personal portfolio website built with **Next.js 16 + TypeScript** — showcasing blockchain projects, services, research, and a full admin panel.
 
-[![Live Demo](https://img.shields.io/badge/Live-Portfolio-00d4ff?style=for-the-badge&logo=vercel)]([https://your-portfolio.vercel.app](https://portfolio-one-bice-xqt0376aiu.vercel.app/))
+[![Live Demo](https://img.shields.io/badge/Live-Portfolio-00d4ff?style=for-the-badge&logo=vercel)](https://portfolio-one-bice-xqt0376aiu.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript)](https://typescriptlang.org)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
