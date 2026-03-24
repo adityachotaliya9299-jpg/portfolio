@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const projects = await sql`
         SELECT id, title, description, tags, github, live, category, featured, created_at as "createdAt"
         FROM projects
-        ORDER BY created_at ASC
+        ORDER BY created_at DESC
       `;
       return res.json(projects);
     } catch (err) {
