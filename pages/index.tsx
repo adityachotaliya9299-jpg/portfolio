@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
-import path from 'path';
-import fs from 'fs';
 import Navbar from '../components/Navbar';
 import { useTheme } from '../components/ThemeContext';
+import { neon } from '@neondatabase/serverless';
+
 
 interface Project {
   id: string; title: string; description: string;
@@ -760,7 +760,11 @@ export default function Home({ projects }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const filePath = path.join(process.cwd(), 'data', 'projects.json');
-  const projects = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  const sql = neon(process.env.DATABASE_URL!);
+  const projects = await sql`
+    SELECT id, title, description, tags, github, live, category, featured, created_at as "createdAt"
+    FROM projects
+    ORDER BY created_at DESC
+  `;
   return { props: { projects } };
 };
