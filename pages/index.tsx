@@ -79,7 +79,13 @@ function ProjectCard({ project }: { project: Project }) {
         </div>
       </div>
       <div style={{ flex: 1 }}>
-        <h3 style={{ fontWeight: 700, fontSize: '0.97rem', marginBottom: '0.45rem', lineHeight: 1.35 }}>{project.title}</h3>
+        <a href={`/projects/${project.id}`} target="_blank" rel="noreferrer"
+          style={{ textDecoration: 'none' }}
+          onMouseEnter={e => (e.currentTarget.querySelector('h3') as HTMLElement).style.color = 'var(--accent)'}
+          onMouseLeave={e => (e.currentTarget.querySelector('h3') as HTMLElement).style.color = 'var(--text)'}
+        >
+          <h3 style={{ fontWeight: 700, fontSize: '0.97rem', marginBottom: '0.45rem', lineHeight: 1.35, transition: 'color 0.2s', color: 'var(--text)' }}>{project.title}</h3>
+        </a>
         <p style={{ color: 'var(--text2)', fontSize: '0.82rem', lineHeight: 1.72 }}>
           {project.description.length > 175 ? project.description.slice(0, 175) + '…' : project.description}
         </p>
