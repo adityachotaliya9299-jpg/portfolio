@@ -5,13 +5,11 @@ const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-  // GET — fetch all projects
   if (req.method === 'GET') {
     try {
       const projects = await sql`
         SELECT id, title, description, tags, github, live, category, featured, created_at as "createdAt"
-        FROM projects
-        ORDER BY created_at DESC
+        FROM projects ORDER BY created_at DESC
       `;
       return res.json(projects);
     } catch (err) {
@@ -20,22 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  // POST — add a project
   if (req.method === 'POST') {
     const auth = req.headers.authorization;
-    if (auth !== `Bearer ${process.env.ADMIN_PASSWORD}`) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+    if (auth !== `Bearer ${process.env.ADMIN_PASSWORD}`) return res.status(401).json({ error: 'Unauthorized' });
     const { title, description, tags, github, live, category, featured } = req.body;
-    if (!title || !description || !github || !category) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
+    if (!title || !description || !github || !category) return res.status(400).json({ error: 'Missing required fields' });
     try {
       const id = Date.now().toString();
-      const tagsArray = Array.isArray(tags)
-        ? tags
-        : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
-
+      const tagsArray = Array.isArray(tags) ? tags : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
       const [project] = await sql`
         INSERT INTO projects (id, title, description, tags, github, live, category, featured, created_at)
         VALUES (${id}, ${title}, ${description}, ${tagsArray}, ${github}, ${live || ''}, ${category}, ${!!featured}, CURRENT_DATE)
@@ -48,12 +38,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  // DELETE — remove a project
+  if (req.method === 'PUT') {
+    const auth = req.headers.authorization;
+    if (auth !== `Bearer ${process.env.ADMIN_PASSWORD}`) return res.status(401).json({ error: 'Unauthorized' });
+    const { id } = req.query;
+    if (!id) return res.status(400).json({ error: 'Missing id' });
+    const { title, description, tags, github, live, category, featured } = req.body;
+    if (!title || !description || !github || !category) return res.status(400).json({ error: 'Missing required fields' });
+    try {
+      const tagsArray = Array.isArray(tags) ? tags : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
+      const [updated] = await sql`
+        UPDATE projects
+        SET title=${title}, description=${description}, tags=${tagsArray},
+            github=${github}, live=${live || ''}, category=${category}, featured=${!!featured}
+        WHERE id = ${id as string}
+        RETURNING id, title, description, tags, github, live, category, featured, created_at as "createdAt"
+      `;
+      if (!updated) return res.status(404).json({ error: 'Project not found' });
+      return res.json(updated);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Failed to update project' });
+    }
+  }
+
   if (req.method === 'DELETE') {
     const auth = req.headers.authorization;
-    if (auth !== `Bearer ${process.env.ADMIN_PASSWORD}`) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+    if (auth !== `Bearer ${process.env.ADMIN_PASSWORD}`) return res.status(401).json({ error: 'Unauthorized' });
     const { id } = req.query;
     if (!id) return res.status(400).json({ error: 'Missing id' });
     try {

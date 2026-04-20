@@ -298,9 +298,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
     if (rows.length === 0) return { props: { project: null } };
 
-    const project = {
+   const project = {
       ...rows[0],
-      createdAt: rows[0].createdAt.toISOString(),
+      createdAt: rows[0].createdAt ? String(rows[0].createdAt).split('T')[0] : '',
     };
 
     return { props: { project } };

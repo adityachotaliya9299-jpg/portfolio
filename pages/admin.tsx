@@ -354,7 +354,7 @@ export default function Admin() {
                         </div>
                         <div style={{ display:'flex', gap:'0.4rem', flexWrap:'wrap' }}>
                           <span style={{ fontFamily:"'DM Mono', monospace", fontSize:'0.65rem', color: catColors[p.category]||'var(--text2)', fontWeight:600 }}>{p.category}</span>
-                          <span style={{ fontFamily:"'DM Mono', monospace", fontSize:'0.65rem', color:'var(--text3)' }}>{p.createdAt}</span>
+                          <span style={{ fontFamily:"'DM Mono', monospace", fontSize:'0.65rem', color:'var(--text3)' }}>{String(p.createdAt).split('T')[0]}</span>
                         </div>
                         <div style={{ display:'flex', flexWrap:'wrap', gap:'0.3rem', marginTop:'0.4rem' }}>
                           {p.tags.slice(0,3).map(t => (
@@ -366,6 +366,10 @@ export default function Admin() {
 
                       {/* Actions */}
                       <div style={{ display:'flex', gap:'0.35rem', flexShrink:0 }}>
+                        <a href={`/admin/edit/${p.id}`} title="Edit project"
+                          style={{ width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:7, border:'1px solid var(--border)', color:'var(--text3)', fontSize:'0.75rem', transition:'all 0.15s', flexShrink:0, textDecoration:'none' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor='var(--accent)'; (e.currentTarget as HTMLElement).style.color='var(--accent)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor='var(--border)'; (e.currentTarget as HTMLElement).style.color='var(--text3)'; }}>✏️</a>
                         {p.live && (
                           <a href={p.live} target="_blank" rel="noreferrer" title="Live"
                             style={{ width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:7, border:'1px solid var(--border)', color:'var(--text3)', fontSize:'0.8rem', transition:'all 0.15s', flexShrink:0 }}

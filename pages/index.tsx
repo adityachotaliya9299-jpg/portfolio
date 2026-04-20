@@ -767,10 +767,14 @@ export default function Home({ projects }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const sql = neon(process.env.DATABASE_URL!);
-  const projects = await sql`
+  const rows = await sql`
     SELECT id, title, description, tags, github, live, category, featured, created_at as "createdAt"
     FROM projects
     ORDER BY created_at DESC
   `;
+  const projects = rows.map((p: Record<string, unknown>) => ({
+    ...p,
+    createdAt: p.createdAt ? String(p.createdAt).split('T')[0] : '',
+  }));
   return { props: { projects } };
 };
