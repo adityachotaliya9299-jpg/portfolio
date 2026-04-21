@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { useTheme } from '../components/ThemeContext';
 import { neon } from '@neondatabase/serverless';
@@ -390,7 +391,7 @@ export default function Home({ projects }: Props) {
                 <div className="section-label">03 / projects</div>
                 <h2 className="section-title" style={{ marginBottom: 0 }}>What I&apos;ve <span style={{ color: 'var(--accent)' }}>Built</span></h2>
               </div>
-              <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+             <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', alignItems: 'center' }}>
                 {categories.map(cat => (
                   <button key={cat} onClick={() => setFilter(cat)} style={{
                     padding: '0.42rem 1rem', borderRadius: 8, border: '1px solid',
@@ -400,6 +401,15 @@ export default function Home({ projects }: Props) {
                     fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s',
                   }}>{cat}</button>
                 ))}
+                <a href="/projects" style={{
+  padding: '0.42rem 1rem', borderRadius: 8,
+  border: '1px solid var(--border)',
+  color: 'var(--text3)', fontSize: '0.8rem', fontWeight: 600,
+  transition: 'all 0.2s', textDecoration: 'none',
+}}
+  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'; (e.currentTarget as HTMLElement).style.color = 'var(--accent)'; }}
+  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = 'var(--text3)'; }}
+>View All →</a>
               </div>
             </div>
             <div className="projects-grid">
