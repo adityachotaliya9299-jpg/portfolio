@@ -55,13 +55,14 @@ export default function Admin() {
   const [pw, setPw] = useState("");
   const [pwError, setPwError] = useState("");
   const [pwLoading, setPwLoading] = useState(false);
-  const [tab, setTab] = useState<'projects'|'messages'|'stats'|'settings'>('projects');
+  const [tab, setTab] = useState<'projects'|'messages'|'stats'|'settings'|'blog'>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [formSuccess, setFormSuccess] = useState("");
   const [formError, setFormError] = useState("");
   const [expandedMsg, setExpandedMsg]     = useState<string|null>(null);
+  const [blogPosts, setBlogPosts] = useState<{id:string;title:string;slug:string;category:string;published:boolean;reading_time:number;created_at:string}[]>([]);
   const [resumeUrl, setResumeUrl]         = useState('/resume.pdf');
   const [resumeInput, setResumeInput]     = useState('/resume.pdf');
   const [resumeSaving, setResumeSaving]   = useState(false);
@@ -80,14 +81,14 @@ export default function Admin() {
   const loadData = useCallback(async (tok: string) => {
     setLoading(true);
     try {
-      const [pr, ms] = await Promise.all([
-        fetch("/api/projects").then((r) => r.json()),
-        fetch("/api/messages", {
-          headers: { Authorization: `Bearer ${tok}` },
-        }).then((r) => r.json()),
+      const [pr, ms, bl] = await Promise.all([
+        fetch('/api/projects').then(r => r.json()),
+        fetch('/api/messages', { headers:{ Authorization:`Bearer ${tok}` }}).then(r => r.json()),
+        fetch('/api/blog?admin=true', { headers:{ Authorization:`Bearer ${tok}` }}).then(r => r.json()),
       ]);
       if (Array.isArray(pr)) setProjects(pr);
       if (Array.isArray(ms)) setMessages(ms);
+      if (Array.isArray(bl)) setBlogPosts(bl);
     } catch {}
     setLoading(false);
   }, []);
@@ -105,6 +106,8 @@ export default function Admin() {
       if (res.ok && data.token) {
         setToken(data.token);setAuthed(true);loadData(data.token);
         localStorage.setItem("admin_session",JSON.stringify({ token: data.token, expiresAt: data.expiresAt }),);
+        
+        fetch('/api/blog?admin=true', { headers: { Authorization: `Bearer ${data.token}` }}).then(r=>r.json()).then(d => { if(Array.isArray(d)) setBlogPosts(d); });
         fetch('/api/settings?key=resume_url').then(r => r.json()).then(d => {
           if (d.value) { setResumeUrl(d.value); setResumeInput(d.value); }
         });
@@ -497,7 +500,8 @@ export default function Admin() {
                   badge: messages.length,
                 },
                 { key: "stats", icon: "📊", label: "Stats" },
-                { key:'settings', icon:'⚙️', label:'Settings' },
+                { key:'blog', icon:'✍️', label:'Blog' },
+              { key:'settings', icon:'⚙️', label:'Settings' },
               ] as {
                 key: typeof tab;
                 icon: string;
@@ -600,6 +604,7 @@ export default function Admin() {
               { key: "projects", icon: "📁", label: "Projects" },
               { key:'messages', icon:'📨', label:'Messages', badge: messages.length },
               { key:'stats',    icon:'📊', label:'Stats' },
+              { key:'blog', icon:'✍️', label:'Blog' },
               { key:'settings', icon:'⚙️', label:'Settings' },
             ] as {
               key: typeof tab;
@@ -1558,7 +1563,71 @@ export default function Admin() {
             </div>
           )}
 
-{/* ── SETTINGS TAB ── */}
+          {/* ── BLOG TAB ── */}
+          {tab === 'blog' && (
+            <div>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem', flexWrap:'wrap', gap:'1rem' }}>
+                <h2 style={{ fontSize:'0.95rem', fontWeight:700 }}>✍️ Blog Posts ({blogPosts.length})</h2>
+                <a href="/admin/blog/new" style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', padding:'0.55rem 1.1rem', borderRadius:9, background:'var(--accent)', color:'#fff', fontWeight:700, fontSize:'0.84rem', textDecoration:'none' }}>
+                  + New Post
+                </a>
+              </div>
+
+              {blogPosts.length === 0 ? (
+                <div style={{ textAlign:'center', padding:'4rem', color:'var(--text3)', fontFamily:"'DM Mono', monospace", fontSize:'0.8rem' }}>
+                  No posts yet. <a href="/admin/blog/new" style={{ color:'var(--accent)' }}>Write your first post →</a>
+                </div>
+              ) : (
+                <div style={{ display:'flex', flexDirection:'column', gap:'0.7rem' }}>
+                  {blogPosts.map(post => (
+                    <div key={post.id} style={{ padding:'1rem 1.25rem', background:'var(--surface)', border:'1px solid var(--border)', borderRadius:11, display:'flex', gap:'0.75rem', alignItems:'center', transition:'border-color 0.2s' }}
+                      onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor='var(--border2)'}
+                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor='var(--border)'}
+                    >
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.25rem', flexWrap:'wrap' }}>
+                          <span style={{ fontWeight:700, fontSize:'0.88rem' }}>{post.title}</span>
+                          <span style={{ fontSize:'0.63rem', fontWeight:600, padding:'0.12rem 0.45rem', borderRadius:20, background: post.published ? 'rgba(0,230,118,0.1)' : 'rgba(100,116,139,0.1)', color: post.published ? 'var(--green)' : 'var(--text3)', border: post.published ? '1px solid rgba(0,230,118,0.25)' : '1px solid var(--border)' }}>
+                            {post.published ? '● Published' : '○ Draft'}
+                          </span>
+                        </div>
+                        <div style={{ display:'flex', gap:'0.5rem', fontFamily:"'DM Mono', monospace", fontSize:'0.65rem', color:'var(--text3)' }}>
+                          <span>{post.category}</span><span>·</span><span>{post.reading_time} min</span><span>·</span>
+                          <span>{String(post.created_at).split('T')[0]}</span>
+                        </div>
+                      </div>
+                      <div style={{ display:'flex', gap:'0.35rem', flexShrink:0 }}>
+                        {post.published && (
+                          <a href={`/blog/${post.slug}`} target="_blank" rel="noreferrer" title="View post"
+                            style={{ width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:7, border:'1px solid var(--border)', color:'var(--text3)', fontSize:'0.8rem', transition:'all 0.15s', textDecoration:'none' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor='var(--accent)'; (e.currentTarget as HTMLElement).style.color='var(--accent)'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor='var(--border)'; (e.currentTarget as HTMLElement).style.color='var(--text3)'; }}>↗</a>
+                        )}
+                        <a href={`/admin/blog/edit/${post.id}`} title="Edit post"
+                          style={{ width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:7, border:'1px solid var(--border)', color:'var(--text3)', fontSize:'0.8rem', transition:'all 0.15s', textDecoration:'none' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor='var(--accent)'; (e.currentTarget as HTMLElement).style.color='var(--accent)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor='var(--border)'; (e.currentTarget as HTMLElement).style.color='var(--text3)'; }}>✏️</a>
+                        <button title="Delete post" onClick={async () => {
+                          if (!confirm(`Delete "${post.title}"?`)) return;
+                          const t = JSON.parse(localStorage.getItem('admin_session')||'{}').token||token;
+                          const res = await fetch(`/api/blog?id=${post.id}`, { method:'DELETE', headers:{ Authorization:`Bearer ${t}` }});
+                          if (res.ok) setBlogPosts(prev => prev.filter(p => p.id !== post.id));
+                        }}
+                          style={{ width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:7, border:'1px solid rgba(255,77,77,0.25)', background:'transparent', color:'rgba(255,77,77,0.6)', fontSize:'0.78rem', cursor:'pointer', transition:'all 0.15s' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background='rgba(255,77,77,0.1)'; (e.currentTarget as HTMLElement).style.color='var(--red)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background='transparent'; (e.currentTarget as HTMLElement).style.color='rgba(255,77,77,0.6)'; }}>🗑</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+
+
+
+          {/* ── SETTINGS TAB ── */}
           {tab === 'settings' && (
             <div style={{ maxWidth: 600 }}>
               <h2 style={{ fontSize:'0.95rem', fontWeight:700, marginBottom:'1.5rem' }}>⚙️ Site Settings</h2>
