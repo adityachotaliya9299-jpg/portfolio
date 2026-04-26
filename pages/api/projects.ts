@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     try {
       const projects = await sql`
-        SELECT id, title, description, tags, github, live, category, featured, created_at as "createdAt"
+        SELECT id, title, description, short_description as "shortDescription", tags, github, live, category, featured, created_at as "createdAt"
         FROM projects ORDER BY created_at DESC
       `;
       return res.json(projects);
@@ -26,10 +26,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const id = Date.now().toString();
       const tagsArray = Array.isArray(tags) ? tags : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
+      const shortDescription = req.body.shortDescription || '';
       const [project] = await sql`
-        INSERT INTO projects (id, title, description, tags, github, live, category, featured, created_at)
-        VALUES (${id}, ${title}, ${description}, ${tagsArray}, ${github}, ${live || ''}, ${category}, ${!!featured}, CURRENT_DATE)
-        RETURNING id, title, description, tags, github, live, category, featured, created_at as "createdAt"
+        INSERT INTO projects (id, title, description, short_description, tags, github, live, category, featured, created_at)
+        VALUES (${id}, ${title}, ${description}, ${shortDescription}, ${tagsArray}, ${github}, ${live || ''}, ${category}, ${!!featured}, CURRENT_DATE)
+        RETURNING id, title, description, short_description as "shortDescription", tags, github, live, category, featured, created_at as "createdAt"
       `;
       return res.status(201).json(project);
     } catch (err) {
@@ -47,12 +48,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!title || !description || !github || !category) return res.status(400).json({ error: 'Missing required fields' });
     try {
       const tagsArray = Array.isArray(tags) ? tags : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
+      const shortDescription = req.body.shortDescription || '';
       const [updated] = await sql`
         UPDATE projects
-        SET title=${title}, description=${description}, tags=${tagsArray},
-            github=${github}, live=${live || ''}, category=${category}, featured=${!!featured}
+        SET title=${title}, description=${description}, short_description=${shortDescription},
+            tags=${tagsArray}, github=${github}, live=${live || ''}, category=${category}, featured=${!!featured}
         WHERE id = ${id as string}
-        RETURNING id, title, description, tags, github, live, category, featured, created_at as "createdAt"
+        RETURNING id, title, description, short_description as "shortDescription", tags, github, live, category, featured, created_at as "createdAt"
       `;
       if (!updated) return res.status(404).json({ error: 'Project not found' });
       return res.json(updated);

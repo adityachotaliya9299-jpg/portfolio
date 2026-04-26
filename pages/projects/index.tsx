@@ -9,6 +9,7 @@ interface Project {
   id: string;
   title: string;
   description: string;
+  shortDescription: string;
   tags: string[];
   github: string;
   live: string;
@@ -82,7 +83,7 @@ function ProjectCard({ project }: { project: Project }) {
           >{project.title}</h3>
         </Link>
         <p style={{ color: 'var(--text2)', fontSize: '0.82rem', lineHeight: 1.72 }}>
-          {project.description.length > 150 ? project.description.slice(0, 150) + '…' : project.description}
+          {project.shortDescription || (project.description.length > 150 ? project.description.slice(0, 150) + '…' : project.description)}
         </p>
       </div>
 
