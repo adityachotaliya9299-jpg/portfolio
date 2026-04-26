@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useTheme } from '../components/ThemeContext';
@@ -20,8 +20,24 @@ const catColors: Record<string,string> = {
 
 export default function Admin() {
   const { theme, toggle } = useTheme();
-  const [authed, setAuthed]       = useState(false);
-  const [token, setToken]         = useState('');
+  const [authed, setAuthed] = useState(false);
+  const [token, setToken]   = useState('');
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('admin_session');
+      if (saved) {
+        const { token: t, expiresAt } = JSON.parse(saved);
+        if (Date.now() < expiresAt) {
+          setToken(t);
+          setAuthed(true);
+          loadData(t);
+        } else {
+          localStorage.removeItem('admin_session');
+        }
+      }
+    } catch {}
+  }, []);
+
   const [pw, setPw]               = useState('');
   const [pwError, setPwError]     = useState('');
   const [pwLoading, setPwLoading] = useState(false);
@@ -60,6 +76,7 @@ export default function Admin() {
       const data = await res.json();
       if (res.ok && data.token) {
         setToken(data.token); setAuthed(true); loadData(data.token);
+        localStorage.setItem('admin_session', JSON.stringify({ token: data.token, expiresAt: data.expiresAt }));
       } else { setPwError('Incorrect password.'); }
     } catch { setPwError('Network error'); }
     setPwLoading(false);

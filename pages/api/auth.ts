@@ -5,7 +5,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { password } = req.body;
   const adminPw = process.env.ADMIN_PASSWORD || 'admin123';
   if (password === adminPw) {
-    return res.json({ token: adminPw, success: true });
+    return res.json({ token: adminPw, success: true, expiresAt: Date.now() + 30 * 60 * 1000 });
   }
   return res.status(401).json({ error: 'Invalid password' });
 }
