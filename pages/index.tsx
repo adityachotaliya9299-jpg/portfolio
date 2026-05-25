@@ -1,9 +1,10 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { useTheme } from '../components/ThemeContext';
+import { useScrollAnimation } from '../components/useScrollAnimation';
 import { neon } from '@neondatabase/serverless';
 
 
@@ -22,11 +23,12 @@ interface Project {
 interface Props { projects: Project[]; }
 
 const SKILLS = [
-  { group: 'Blockchain',   emoji: '⛓️', items: ['Solidity', 'Foundry', 'Hardhat', 'EVM', 'OpenZeppelin', 'Chainlink', 'ERC-721A', 'ERC-20'] },
-  { group: 'DeFi & Web3', emoji: '💎', items: ['Smart Contracts', 'thirdweb', 'ethers.js', 'IPFS', 'Merkle Trees', 'DAO Governance', 'DeFi Protocols', 'UUPS Proxy'] },
-  { group: 'Frontend',     emoji: '🖥️', items: ['Next.js', 'React', 'TypeScript', 'CSS Modules', 'Tailwind CSS', 'Recharts'] },
-  { group: 'Backend',      emoji: '⚙️', items: ['Node.js', 'Express.js', 'PostgreSQL', 'REST APIs', 'JWT Auth', 'WebSockets'] },
-  { group: 'Research',     emoji: '📖', items: ['Algorithmic Trading', 'Market Microstructure', 'Adaptive Systems', 'Financial Modeling', 'Statistical Analysis'] },
+  { group: 'EVM / Solidity',  emoji: '⛓️', items: ['Solidity', 'Foundry', 'Hardhat', 'EVM', 'OpenZeppelin', 'Chainlink', 'ERC-721A', 'ERC-20', 'UUPS Proxy', 'Flash Loans'] },
+  { group: 'Solana / Rust',   emoji: '◎',  items: ['Rust', 'Anchor 0.31.1', 'SPL Token', 'PDA Architecture', 'CPI', 'Helius API', 'FHE (Encrypt)', 'Ika dWallets'] },
+  { group: 'DeFi & Web3',     emoji: '💎', items: ['Chainlink VRF/Feeds', 'Uniswap v3 TWAP', 'The Graph', 'IPFS', 'Merkle Trees', 'DAO Governance', 'Liquidation Bots', 'AMMs'] },
+  { group: 'Frontend',        emoji: '🖥️', items: ['Next.js 15', 'React', 'TypeScript', 'wagmi v2', 'viem', 'RainbowKit', 'Tailwind CSS', 'Recharts'] },
+  { group: 'Backend & Infra', emoji: '⚙️', items: ['Node.js', 'PostgreSQL', 'JWT', 'Discord.js', 'Railway', 'Vercel', 'REST APIs', 'WebSockets'] },
+  { group: 'Research & AI',   emoji: '📖', items: ['MARL', 'DQN', 'PPO', 'Reinforcement Learning', 'Market Microstructure', 'Financial Modeling'] },
 ];
 
 const CAT_STYLE: Record<string, { color: string; bg: string; border: string; icon: string }> = {
@@ -105,6 +107,42 @@ function ProjectCard({ project }: { project: Project }) {
     </div>
   );
 }
+function AboutSection() {
+  const leftRef = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+  const rightRef = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+  return (
+    <div className="two-col">
+      <div ref={leftRef} className="scroll-hidden-left">
+        <div className="section-label">01 / about</div>
+        <h2 className="section-title">Building the<br /><span style={{ color: 'var(--accent)' }}>Decentralized</span> Future</h2>
+        <p style={{ color: 'var(--text2)', lineHeight: 1.85, marginBottom: '1.2rem', fontSize: '0.94rem' }}>
+          I&apos;m a full-stack blockchain developer building on both <strong style={{ color: 'var(--text)' }}>Ethereum (Solidity + Foundry)</strong> and <strong style={{ color: 'var(--text)' }}>Solana (Rust + Anchor)</strong>. Every project ships with smart contracts, tests, frontends, subgraphs, bots, and documentation.
+        </p>
+        <p style={{ color: 'var(--text2)', lineHeight: 1.85, marginBottom: '2rem', fontSize: '0.94rem' }}>
+          Hackathon builder — entered <strong style={{ color: 'var(--text)' }}>Colosseum Frontier 2026</strong> with PrivaLend (dark pool lending + FHE) and WorkChain (AI agent payroll). Also published MARL research on <em style={{ color: 'var(--text)', fontStyle: 'normal', fontWeight: 600 }}>Adaptive Market Equilibrium</em>.
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <a href="https://github.com/adityachotaliya9299-jpg" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>GitHub ↗</a>
+          <a href="#contact" className="btn btn-ghost" style={{ fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>Let&apos;s Talk</a>
+        </div>
+      </div>
+      <div ref={rightRef} className="scroll-hidden-right about-cards">
+        {[
+          { icon: '⛓️', label: 'EVM Contracts', desc: '60+ production Solidity contracts' },
+          { icon: '◎',  label: 'Solana / Rust', desc: 'Anchor, SPL, FHE, dWallets' },
+          { icon: '💎', label: 'DeFi Protocols', desc: 'Lending, staking, prediction markets' },
+          { icon: '📖', label: 'Research & AI', desc: 'MARL, DQN, market simulation' },
+        ].map(item => (
+          <div key={item.label} className="glow-hover" style={{ padding: '1.4rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12 }}>
+            <div style={{ fontSize: '1.6rem', marginBottom: '0.65rem' }}>{item.icon}</div>
+            <div style={{ fontWeight: 700, marginBottom: '0.3rem', fontSize: '0.88rem' }}>{item.label}</div>
+            <div style={{ color: 'var(--text3)', fontSize: '0.76rem', lineHeight: 1.5 }}>{item.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Home({ projects }: Props) {
   const { theme } = useTheme();
@@ -113,6 +151,17 @@ export default function Home({ projects }: Props) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+
+  // Scroll animation observer
+  useEffect(() => {
+    const targets = document.querySelectorAll('.scroll-hidden, .scroll-hidden-left, .scroll-hidden-right, .scroll-hidden-scale, .stagger-children');
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('scroll-visible'); observer.unobserve(e.target); } }),
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    targets.forEach(t => observer.observe(t));
+    return () => observer.disconnect();
+  }, []);
 
   const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
   const filtered = filter === 'All' ? projects : projects.filter(p => p.category === filter);
@@ -186,7 +235,7 @@ export default function Home({ projects }: Props) {
                 </div>
 
                 <div style={{ display: 'flex', gap: 'clamp(1.5rem, 4vw, 2.5rem)', flexWrap: 'wrap' }}>
-                  {[['6+', 'Projects Built'], ['1+', 'Yrs Web3'], ['61', 'GATE 2026 AIR'], ['1', 'Research Paper']].map(([n, l]) => (
+                  {[['10+', 'Projects Live'], ['1+', 'Yrs Web3'], ['750+', 'Tests Written'], ['AIR 61', 'GATE 2026']].map(([n, l]) => (
                     <div key={l}>
                       <div style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>{n}</div>
                       <div className="mono" style={{ fontSize: '0.68rem', color: 'var(--text3)', letterSpacing: '0.08em', marginTop: 3 }}>{l}</div>
@@ -206,17 +255,17 @@ export default function Home({ projects }: Props) {
                     {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: '50%', background: c }} />)}
                   </div>
                   <pre className="mono" style={{ fontSize: 'clamp(0.68rem, 1.8vw, 0.78rem)', color: 'var(--text2)', lineHeight: 1.85 }}>
-{`// `}<span style={{ color: 'var(--text3)' }}>Blockchain Engineer</span>{`
-`}<span style={{ color: 'var(--accent3)' }}>const</span>{` dev = {
-  `}<span style={{ color: 'var(--accent)' }}>name</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Aditya"</span>{`,
-  `}<span style={{ color: 'var(--accent)' }}>chain</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Ethereum"</span>{`,
-  `}<span style={{ color: 'var(--accent)' }}>stack</span>{`: [
-    `}<span style={{ color: 'var(--gold)' }}>"Solidity"</span>{`,
-    `}<span style={{ color: 'var(--gold)' }}>"Foundry"</span>{`,
-    `}<span style={{ color: 'var(--gold)' }}>"Next.js"</span>{`
-  ],
-  `}<span style={{ color: 'var(--accent)' }}>open</span>{`: `}<span style={{ color: 'var(--green)' }}>true
-</span>{`}`}
+                    {`// `}<span style={{ color: 'var(--text3)' }}>Blockchain Engineer</span>{`
+                    `}<span style={{ color: 'var(--accent3)' }}>const</span>{` dev = {
+                      `}<span style={{ color: 'var(--accent)' }}>name</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Aditya"</span>{`,
+                      `}<span style={{ color: 'var(--accent)' }}>chain</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Ethereum"</span>{`,
+                      `}<span style={{ color: 'var(--accent)' }}>stack</span>{`: [
+                        `}<span style={{ color: 'var(--gold)' }}>"Solidity"</span>{`,
+                        `}<span style={{ color: 'var(--gold)' }}>"Foundry"</span>{`,
+                        `}<span style={{ color: 'var(--gold)' }}>"Next.js"</span>{`
+                      ],
+                      `}<span style={{ color: 'var(--accent)' }}>open</span>{`: `}<span style={{ color: 'var(--green)' }}>true
+                    </span>{`}`}
                   </pre>
                 </div>
                 <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem 1.1rem', display: 'flex', gap: '0.65rem', alignItems: 'center', marginTop: '0.9rem' }}>
@@ -235,7 +284,8 @@ export default function Home({ projects }: Props) {
         <section id="about" className="section">
           <div className="container">
             <div className="divider" style={{ marginBottom: '4rem' }} />
-            <div className="two-col">
+            <AboutSection />
+       
               <div>
                 <div className="section-label">01 / about</div>
                 <h2 className="section-title">Building the<br /><span style={{ color: 'var(--accent)' }}>Decentralized</span> Future</h2>
@@ -329,22 +379,20 @@ export default function Home({ projects }: Props) {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div>            
             </div>
-          </div>
         </section>
 
         {/* ═══════════ SERVICES ═══════════ */}
         <section id="services" className="section">
           <div className="container">
-            <div className="section-label">02 / services</div>
-            <h2 className="section-title">What I <span style={{ color: 'var(--accent)' }}>Offer</span></h2>
-            <p style={{ color: 'var(--text2)', fontSize: '0.95rem', lineHeight: 1.75, maxWidth: 580, marginBottom: '3rem' }}>
+            <div className="section-label scroll-hidden">02 / services</div>
+            <h2 className="section-title scroll-hidden" style={{ transitionDelay:'0.1s' }}>What I <span style={{ color: 'var(--accent)' }}>Offer</span></h2>
+            <p className="scroll-hidden" style={{ transitionDelay:'0.2s', color: 'var(--text2)', fontSize: '0.95rem',lineHeight: 1.75, maxWidth: 580, marginBottom: '3rem' }}>
               End-to-end blockchain engineering — from whitepaper to mainnet deployment. Here&apos;s what I can build for you.
             </p>
 
-            <div className="services-grid">
-              {[
+            <div className="services-grid stagger-children"> {[
                 { icon: '📜', title: 'Smart Contract Development', desc: 'Production-grade Solidity contracts with Foundry. ERC-20, ERC-721, ERC-1155, custom protocols — fully tested and gas-optimized.', tags: ['Solidity', 'Foundry', 'OpenZeppelin', 'Gas Optimization'] },
                 { icon: '🔍', title: 'Smart Contract Auditing', desc: 'Manual security review covering reentrancy, access control, integer overflow, front-running, and logic flaws. Delivered with a written report.', tags: ['Security Review', 'Slither', 'Echidna', 'Audit Report'] },
                 { icon: '💎', title: 'DeFi Protocol Development', desc: 'AMMs, lending markets, staking systems, algorithmic stablecoins, DAO governance, and yield strategies — built with DeFi-grade rigor.', tags: ['AMM', 'Staking', 'Stablecoins', 'Chainlink', 'DAO'] },
@@ -398,8 +446,8 @@ export default function Home({ projects }: Props) {
             <div className="divider" style={{ marginBottom: '4rem' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <div className="section-label">03 / projects</div>
-                <h2 className="section-title" style={{ marginBottom: 0 }}>What I&apos;ve <span style={{ color: 'var(--accent)' }}>Built</span></h2>
+                <div className="section-label scroll-hidden">03 / projects</div>
+                <h2 className="section-title scroll-hidden" style={{ marginBottom: 0, transitionDelay:'0.1s' }}>What I&apos;ve <span style={{ color: 'var(--accent)' }}>Built</span></h2>
               </div>
              <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', alignItems: 'center' }}>
                 {categories.map(cat => (
@@ -422,7 +470,7 @@ export default function Home({ projects }: Props) {
 >View All →</a>
               </div>
             </div>
-            <div className="projects-grid">
+            <div className="projects-grid stagger-children">
               {filtered.map(p => <ProjectCard key={p.id} project={p} />)}
             </div>
           </div>
@@ -605,6 +653,9 @@ export default function Home({ projects }: Props) {
                     { icon: '📧', label: 'Email', value: 'adityachotaliya9299@gmail.com', href: 'mailto:adityachotaliya9299@gmail.com' },
                     { icon: '💼', label: 'GitHub', value: 'adityachotaliya9299-jpg', href: 'https://github.com/adityachotaliya9299-jpg' },
                     { icon: '🔗', label: 'LinkedIn', value: 'linkedin.com/in/aditya-chotaliya', href: 'https://linkedin.com/in/aditya-chotaliya' },
+                    { icon: '𝕏',  label: 'Twitter / X', value: '@AdityaChot15838', href: 'https://x.com/AdityaChot15838' },
+                    { icon: '🛒', label: 'Fiverr', value: 'fiverr.com/s/wkY4zwg', href: 'https://fiverr.com/s/wkY4zwg' },
+                    { icon: '✈️', label: 'Telegram', value: '@Aditya9298', href: 'https://t.me/Aditya9298' },
                     { icon: '📍', label: 'Location', value: 'Available worldwide', href: '' },
                     
                   ].map(item => (
