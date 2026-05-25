@@ -655,7 +655,6 @@ export default function Home({ projects }: Props) {
                     { icon: '🔗', label: 'LinkedIn', value: 'linkedin.com/in/aditya-chotaliya', href: 'https://linkedin.com/in/aditya-chotaliya' },
                     { icon: '𝕏',  label: 'Twitter / X', value: '@AdityaChot15838', href: 'https://x.com/AdityaChot15838' },
                     { icon: '🛒', label: 'Fiverr', value: 'fiverr.com/s/wkY4zwg', href: 'https://fiverr.com/s/wkY4zwg' },
-                    { icon: '✈️', label: 'Telegram', value: '@Aditya9298', href: 'https://t.me/Aditya9298' },
                     { icon: '📍', label: 'Location', value: 'Available worldwide', href: '' },
                     
                   ].map(item => (
