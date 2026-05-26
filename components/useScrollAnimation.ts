@@ -8,9 +8,9 @@ interface ScrollAnimationOptions {
 
 export function useScrollAnimation<T extends HTMLElement>(
   options: ScrollAnimationOptions = {}
-): RefObject<T> {
+): RefObject<T | null> {
   const { threshold = 0.15, rootMargin = '0px 0px -60px 0px', once = true } = options;
-  const ref = useRef<T>(null);
+  const ref = useRef<T | null>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -40,8 +40,8 @@ export function useCounter(
   end: number,
   duration = 2000,
   startOnVisible = true
-): { ref: RefObject<HTMLElement>; value: number } {
-  const ref = useRef<HTMLElement>(null);
+): { ref: RefObject<HTMLElement | null>; value: number } {
+  const ref = useRef<HTMLElement | null>(null);
   const valueRef = useRef(0);
 
   useEffect(() => {
