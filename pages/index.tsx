@@ -146,7 +146,6 @@ function AboutSection() {
 
 export default function Home({ projects }: Props) {
   const { theme } = useTheme();
-  const [filter, setFilter] = useState('All');
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -163,8 +162,7 @@ export default function Home({ projects }: Props) {
     return () => observer.disconnect();
   }, []);
 
-  const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
-  const filtered = filter === 'All' ? projects : projects.filter(p => p.category === filter);
+  const filtered = projects;
 
   const isDark = theme === 'dark';
   const orb1bg = isDark ? 'var(--accent)' : 'var(--accent)';
@@ -254,19 +252,18 @@ export default function Home({ projects }: Props) {
                   <div style={{ display: 'flex', gap: 6, marginBottom: '1rem' }}>
                     {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: '50%', background: c }} />)}
                   </div>
-                  <pre className="mono" style={{ fontSize: 'clamp(0.68rem, 1.8vw, 0.78rem)', color: 'var(--text2)', lineHeight: 1.85 }}>
-                    {`// `}<span style={{ color: 'var(--text3)' }}>Blockchain Engineer</span>{`
-                    `}<span style={{ color: 'var(--accent3)' }}>const</span>{` dev = {
-                      `}<span style={{ color: 'var(--accent)' }}>name</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Aditya"</span>{`,
-                      `}<span style={{ color: 'var(--accent)' }}>chain</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Ethereum"</span>{`,
-                      `}<span style={{ color: 'var(--accent)' }}>stack</span>{`: [
-                        `}<span style={{ color: 'var(--gold)' }}>"Solidity"</span>{`,
-                        `}<span style={{ color: 'var(--gold)' }}>"Foundry"</span>{`,
-                        `}<span style={{ color: 'var(--gold)' }}>"Next.js"</span>{`
-                      ],
-                      `}<span style={{ color: 'var(--accent)' }}>open</span>{`: `}<span style={{ color: 'var(--green)' }}>true
-                    </span>{`}`}
-                  </pre>
+                  <pre className="mono" style={{ fontSize: 'clamp(0.68rem, 1.8vw, 0.78rem)', color: 'var(--text2)', lineHeight: 1.85 }}>{
+`// `}<span style={{ color: 'var(--text3)' }}>Blockchain Engineer</span>{`
+`}<span style={{ color: 'var(--accent3)' }}>const</span>{` dev = {
+  `}<span style={{ color: 'var(--accent)' }}>name</span>{`:  `}<span style={{ color: 'var(--gold)' }}>"Aditya"</span>{`,
+  `}<span style={{ color: 'var(--accent)' }}>chain</span>{`: `}<span style={{ color: 'var(--gold)' }}>"Ethereum"</span>{`,
+  `}<span style={{ color: 'var(--accent)' }}>stack</span>{`: [
+    `}<span style={{ color: 'var(--gold)' }}>"Solidity"</span>{`,
+    `}<span style={{ color: 'var(--gold)' }}>"Foundry"</span>{`,
+    `}<span style={{ color: 'var(--gold)' }}>"Next.js"</span>{`
+  ],
+  `}<span style={{ color: 'var(--accent)' }}>open</span>{`: `}<span style={{ color: 'var(--green)' }}>true</span>{`
+}`}</pre>
                 </div>
                 <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '0.9rem 1.1rem', display: 'flex', gap: '0.65rem', alignItems: 'center', marginTop: '0.9rem' }}>
                   <span style={{ fontSize: '1.1rem' }}>📍</span>
@@ -285,102 +282,7 @@ export default function Home({ projects }: Props) {
           <div className="container">
             <div className="divider" style={{ marginBottom: '4rem' }} />
             <AboutSection />
-       
-              <div>
-                <div className="section-label">01 / about</div>
-                <h2 className="section-title">Building the<br /><span style={{ color: 'var(--accent)' }}>Decentralized</span> Future</h2>
-                <p style={{ color: 'var(--text2)', lineHeight: 1.85, marginBottom: '1.2rem', fontSize: '0.94rem' }}>
-                  I&apos;m a full-stack blockchain developer focused on Ethereum smart contracts, DeFi protocol design, and NFT ecosystems. I build production-ready systems combining on-chain security with seamless Web3 UX.
-                </p>
-                <p style={{ color: 'var(--text2)', lineHeight: 1.85, marginBottom: '2rem', fontSize: '0.94rem' }}>
-                  Beyond code, I research the intersection of AI and financial systems. My MARL paper on <em style={{ color: 'var(--text)', fontStyle: 'normal', fontWeight: 600 }}>Adaptive Market Equilibrium</em> and back-to-back top-200 GATE CS ranks reflect a strong foundation in computer science and algorithmic thinking.
-                </p>
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <a href="https://github.com/adityachotaliya9299-jpg" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>GitHub ↗</a>
-                  <a href="#contact" className="btn btn-ghost" style={{ fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>Let&apos;s Talk</a>
-                </div>
-              </div>
-
-              <div className="about-cards">
-                {[
-                  { icon: '⛓️', label: 'Smart Contracts', desc: 'Production Solidity with Foundry' },
-                  { icon: '💎', label: 'DeFi Protocols', desc: 'Stablecoins, staking, DAO governance' },
-                  { icon: '🖼️', label: 'NFT Ecosystems', desc: 'ERC-721A, royalties, metadata' },
-                  { icon: '📖', label: 'Research', desc: 'Adaptive market equilibrium' },
-                ].map(item => (
-                  <div key={item.label} style={{
-                    padding: '1.4rem', background: 'var(--surface)',
-                    border: '1px solid var(--border)', borderRadius: 12, transition: 'all 0.2s',
-                  }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border2)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
-                  >
-                    <div style={{ fontSize: '1.6rem', marginBottom: '0.65rem' }}>{item.icon}</div>
-                    <div style={{ fontWeight: 700, marginBottom: '0.3rem', fontSize: '0.88rem' }}>{item.label}</div>
-                    <div style={{ color: 'var(--text3)', fontSize: '0.76rem', lineHeight: 1.5 }}>{item.desc}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* GATE Achievements */}
-              <div style={{ gridColumn: '1 / -1', marginTop: '0.5rem' }}>
-                <div className="mono" style={{ fontSize: '0.65rem', color: 'var(--text3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem' }}>
-                  🏆 GATE CS Achievements
-                </div>
-                <div className="gate-cards">
-                  {[
-                    { year: 'GATE 2026', air: 'AIR 61', score: '914', marks: '70.9 / 100', institute: 'IIT Guwahati', pdf: '/gate-2026.pdf', highlight: true },
-                    { year: 'GATE 2025', air: 'AIR 154', score: '853', marks: '78.64 / 100', institute: 'IIT Roorkee', pdf: '/gate-2025.pdf', highlight: false },
-                  ].map(g => (
-                    <div key={g.year} style={{
-                      padding: '1.1rem 1.25rem',
-                      background: g.highlight ? 'linear-gradient(135deg, rgba(0,153,204,0.08), rgba(123,47,247,0.06))' : 'var(--surface)',
-                      border: `1px solid ${g.highlight ? 'rgba(0,153,204,0.3)' : 'var(--border)'}`,
-                      borderRadius: 12, transition: 'all 0.2s',
-                    }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px var(--shadow)'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = ''; }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
-                        <div>
-                          <div className="mono" style={{ fontSize: '0.65rem', color: 'var(--text3)', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>{g.year} · {g.institute}</div>
-                          <div style={{ fontWeight: 800, fontSize: '1.4rem', color: 'var(--accent)', lineHeight: 1 }}>{g.air}</div>
-                        </div>
-                        {g.highlight && (
-                          <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--gold)', padding: '0.15rem 0.5rem', border: '1px solid rgba(180,83,9,0.3)', borderRadius: 4 }}>★ Best</span>
-                        )}
-                      </div>
-                      <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem' }}>
-                        <div>
-                          <div className="mono" style={{ fontSize: '0.6rem', color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Score</div>
-                          <div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text)' }}>{g.score}</div>
-                        </div>
-                        <div>
-                          <div className="mono" style={{ fontSize: '0.6rem', color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Marks</div>
-                          <div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text)' }}>{g.marks}</div>
-                        </div>
-                        <div>
-                          <div className="mono" style={{ fontSize: '0.6rem', color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Paper</div>
-                          <div style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text)' }}>CS</div>
-                        </div>
-                      </div>
-                      <a href={g.pdf} target="_blank" rel="noreferrer" style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-                        padding: '0.3rem 0.7rem', borderRadius: 6,
-                        border: '1px solid var(--border)', background: 'var(--bg2)',
-                        color: 'var(--text3)', fontSize: '0.72rem', fontWeight: 600,
-                        transition: 'all 0.15s',
-                      }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'; (e.currentTarget as HTMLElement).style.color = 'var(--accent)'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = 'var(--text3)'; }}
-                      >
-                        📄 View Scorecard
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              </div>            
-            </div>
+          </div>
         </section>
 
         {/* ═══════════ SERVICES ═══════════ */}
@@ -449,29 +351,18 @@ export default function Home({ projects }: Props) {
                 <div className="section-label scroll-hidden">03 / projects</div>
                 <h2 className="section-title scroll-hidden" style={{ marginBottom: 0, transitionDelay:'0.1s' }}>What I&apos;ve <span style={{ color: 'var(--accent)' }}>Built</span></h2>
               </div>
-             <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                {categories.map(cat => (
-                  <button key={cat} onClick={() => setFilter(cat)} style={{
-                    padding: '0.42rem 1rem', borderRadius: 8, border: '1px solid',
-                    borderColor: filter === cat ? 'var(--accent)' : 'var(--border)',
-                    background: filter === cat ? 'rgba(0,153,204,0.1)' : 'transparent',
-                    color: filter === cat ? 'var(--accent)' : 'var(--text3)',
-                    fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s',
-                  }}>{cat}</button>
-                ))}
-                <a href="/projects" style={{
-  padding: '0.42rem 1rem', borderRadius: 8,
-  border: '1px solid var(--border)',
-  color: 'var(--text3)', fontSize: '0.8rem', fontWeight: 600,
-  transition: 'all 0.2s', textDecoration: 'none',
-}}
-  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'; (e.currentTarget as HTMLElement).style.color = 'var(--accent)'; }}
-  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = 'var(--text3)'; }}
->View All →</a>
-              </div>
+             <a href="/projects" style={{
+                padding: '0.5rem 1.25rem', borderRadius: 9,
+                border: '1px solid var(--border)', background: 'var(--surface)',
+                color: 'var(--text2)', fontSize: '0.85rem', fontWeight: 600,
+                transition: 'all 0.2s', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'; (e.currentTarget as HTMLElement).style.color = 'var(--accent)'; (e.currentTarget as HTMLElement).style.background = 'rgba(0,153,204,0.06)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = 'var(--text2)'; (e.currentTarget as HTMLElement).style.background = 'var(--surface)'; }}
+              >View All Projects →</a>
             </div>
             <div className="projects-grid stagger-children">
-              {filtered.map(p => <ProjectCard key={p.id} project={p} />)}
+              {projects.map(p => <ProjectCard key={p.id} project={p} />)}
             </div>
           </div>
         </section>
@@ -858,7 +749,7 @@ export default function Home({ projects }: Props) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const sql = neon(process.env.DATABASE_URL!);
   const rows = await sql`
-      SELECT id, title, description, tags, github, live, category, featured, created_at as "createdAt"
+      SELECT id, title, description, short_description as "shortDescription", tags, github, live, category, featured, created_at as "createdAt"
       FROM projects
       WHERE featured = true
       ORDER BY created_at DESC
