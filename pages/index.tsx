@@ -543,7 +543,6 @@ export default function Home({ projects }: Props) {
                   {[
                     { icon: '📧', label: 'Email', value: 'adityachotaliya9299@gmail.com', href: 'mailto:adityachotaliya9299@gmail.com' },
                     { icon: '💼', label: 'GitHub', value: 'adityachotaliya9299-jpg', href: 'https://github.com/adityachotaliya9299-jpg' },
-                    { icon: '🔗', label: 'LinkedIn', value: 'linkedin.com/in/aditya-chotaliya', href: 'https://linkedin.com/in/aditya-chotaliya' },
                     { icon: '𝕏',  label: 'Twitter / X', value: '@AdityaChot15838', href: 'https://x.com/AdityaChot15838' },
                     { icon: '🛒', label: 'Fiverr', value: 'fiverr.com/s/wkY4zwg', href: 'https://fiverr.com/s/wkY4zwg' },
                     { icon: '📍', label: 'Location', value: 'Available worldwide', href: '' },
