@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { neon } from '@neondatabase/serverless';
 import { useTheme } from '../../components/ThemeContext';
+import MarkdownRenderer from '../../components/MarkdownRenderer';
 
 interface Project {
   id: string;
@@ -168,9 +169,7 @@ export default function ProjectDetail({ project }: Props) {
               About this project
             </div>
             <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 'clamp(1.25rem,3vw,2rem)' }}>
-              <p style={{ color: 'var(--text2)', fontSize: '0.97rem', lineHeight: 2, whiteSpace: 'pre-wrap' }}>
-                {project.description}
-              </p>
+              <MarkdownRenderer content={project.description} />
             </div>
           </div>
 
