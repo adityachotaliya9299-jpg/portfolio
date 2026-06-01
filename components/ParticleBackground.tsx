@@ -32,7 +32,7 @@ export default function ParticleBackground() {
     window.addEventListener('mousemove', onMouseMove);
 
     // Create particles
-    const count = Math.min(Math.floor(window.innerWidth / 14), 100);
+    const count = Math.min(Math.floor(window.innerWidth / 7), 200);
     for (let i = 0; i < count; i++) {
       const baseOpacity = 0.15 + Math.random() * 0.35;
       particles.push({
@@ -40,7 +40,7 @@ export default function ParticleBackground() {
         y: Math.random() * window.innerHeight,
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
-        size: 1 + Math.random() * 1.5,
+        size: 0.8 + Math.random() * 2,
         opacity: baseOpacity,
         baseOpacity,
       });
@@ -93,7 +93,7 @@ export default function ParticleBackground() {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 100;
+          const maxDist = 130;
 
           if (dist < maxDist) {
             const alpha = (1 - dist / maxDist) * 0.12;

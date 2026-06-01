@@ -151,25 +151,65 @@ export default function Home({ projects }: Props) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
 
-  // Mouse spotlight — smooth follow
+  // Enhanced cursor
   useEffect(() => {
     const spotlight = document.getElementById('spotlight');
-    if (!spotlight) return;
+    const dot      = document.getElementById('cursor-dot');
+    const ring     = document.getElementById('cursor-ring');
+    if (!spotlight || !dot || !ring) return;
+
     let raf: number;
-    let tx = 0, ty = 0, cx = 0, cy = 0;
+    let mx = 0, my = 0;   // real mouse
+    let sx = 0, sy = 0;   // spotlight (slow)
+    let rx = 0, ry = 0;   // ring (medium)
     let visible = false;
 
     const move = (e: MouseEvent) => {
-      tx = e.clientX - 250; ty = e.clientY - 250;
-      if (!visible) { spotlight.style.opacity = '1'; visible = true; }
+      mx = e.clientX; my = e.clientY;
+      // Dot follows instantly
+      dot.style.left  = mx + 'px';
+      dot.style.top   = my + 'px';
+      if (!visible) {
+        spotlight.style.opacity = '1';
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+        visible = true;
+      }
     };
-    const hide = () => { spotlight.style.opacity = '0'; visible = false; };
+    const hide = () => {
+      spotlight.style.opacity = '0';
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+      visible = false;
+    };
+
+    // Expand ring on hover over interactive elements
+    const onEnter = () => {
+      ring.style.width = '52px'; ring.style.height = '52px';
+      ring.style.borderColor = 'rgba(0,212,255,0.9)';
+    };
+    const onLeave = () => {
+      ring.style.width = '32px'; ring.style.height = '32px';
+      ring.style.borderColor = 'rgba(0,212,255,0.5)';
+    };
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', onEnter);
+      el.addEventListener('mouseleave', onLeave);
+    });
 
     const animate = () => {
-      cx += (tx - cx) * 0.1;
-      cy += (ty - cy) * 0.1;
-      spotlight.style.left = cx + 'px';
-      spotlight.style.top = cy + 'px';
+      // Spotlight — very smooth lag
+      sx += (mx - 300 - sx) * 0.07;
+      sy += (my - 300 - sy) * 0.07;
+      spotlight.style.left = sx + 'px';
+      spotlight.style.top  = sy + 'px';
+
+      // Ring — medium lag
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+
       raf = requestAnimationFrame(animate);
     };
     animate();
@@ -231,7 +271,12 @@ export default function Home({ projects }: Props) {
      <div style={{ position: 'fixed', width: 650, height: 650, borderRadius: '50%', background: orb1bg, filter: 'blur(150px)', opacity: 'var(--orb1-opacity)', top: -200, right: -150, zIndex: 0, pointerEvents: 'none', animation: 'orbFloat1 12s ease-in-out infinite' }} />
       <div style={{ position: 'fixed', width: 550, height: 550, borderRadius: '50%', background: orb2bg, filter: 'blur(140px)', opacity: 'var(--orb2-opacity)', bottom: -150, left: -100, zIndex: 0, pointerEvents: 'none', animation: 'orbFloat2 15s ease-in-out infinite' }} />
       <div style={{ position: 'fixed', width: 400, height: 400, borderRadius: '50%', background: 'var(--accent3)', filter: 'blur(130px)', opacity: 0.03, top: '40%', left: '50%', zIndex: 0, pointerEvents: 'none', animation: 'orbFloat3 18s ease-in-out infinite' }} />
-      <div id="spotlight" style={{ position: 'fixed', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.07) 0%, rgba(0,153,204,0.03) 40%, transparent 70%)', pointerEvents: 'none', zIndex: 1, opacity: 0, transition: 'left 0.08s ease, top 0.08s ease, opacity 0.4s ease' }} />
+      {/* Cursor outer glow */}
+      <div id="spotlight" style={{ position: 'fixed', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.09) 0%, rgba(0,153,204,0.04) 35%, rgba(123,47,247,0.02) 60%, transparent 75%)', pointerEvents: 'none', zIndex: 1, opacity: 0 }} />
+      {/* Cursor inner sharp dot */}
+      <div id="cursor-dot" style={{ position: 'fixed', width: 8, height: 8, borderRadius: '50%', background: 'rgba(0,212,255,0.9)', boxShadow: '0 0 12px rgba(0,212,255,0.8), 0 0 24px rgba(0,212,255,0.4)', pointerEvents: 'none', zIndex: 2, opacity: 0, transform: 'translate(-50%, -50%)' }} />
+      {/* Cursor ring */}
+      <div id="cursor-ring" style={{ position: 'fixed', width: 32, height: 32, borderRadius: '50%', border: '1px solid rgba(0,212,255,0.5)', pointerEvents: 'none', zIndex: 2, opacity: 0, transform: 'translate(-50%, -50%)', transition: 'width 0.2s, height 0.2s, border-color 0.2s' }} />
 
       <Navbar />
 
