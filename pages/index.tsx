@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import { useTheme } from '../components/ThemeContext';
 import { useScrollAnimation } from '../components/useScrollAnimation';
 import { neon } from '@neondatabase/serverless';
-
+import ParticleBackground from '../components/ParticleBackground';
 
 interface Project {
   id: string;
@@ -151,6 +151,38 @@ export default function Home({ projects }: Props) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
 
+  // Mouse spotlight — smooth follow
+  useEffect(() => {
+    const spotlight = document.getElementById('spotlight');
+    if (!spotlight) return;
+    let raf: number;
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    let visible = false;
+
+    const move = (e: MouseEvent) => {
+      tx = e.clientX - 250; ty = e.clientY - 250;
+      if (!visible) { spotlight.style.opacity = '1'; visible = true; }
+    };
+    const hide = () => { spotlight.style.opacity = '0'; visible = false; };
+
+    const animate = () => {
+      cx += (tx - cx) * 0.1;
+      cy += (ty - cy) * 0.1;
+      spotlight.style.left = cx + 'px';
+      spotlight.style.top = cy + 'px';
+      raf = requestAnimationFrame(animate);
+    };
+    animate();
+
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseleave', hide);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseleave', hide);
+    };
+  }, []);
+
   // Scroll animation observer
   useEffect(() => {
     const targets = document.querySelectorAll('.scroll-hidden, .scroll-hidden-left, .scroll-hidden-right, .scroll-hidden-scale, .stagger-children');
@@ -189,13 +221,17 @@ export default function Home({ projects }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
+      <ParticleBackground />
+
       {/* Background grid */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0,
         backgroundImage: `linear-gradient(rgba(0,153,204,var(--grid-opacity)) 1px, transparent 1px), linear-gradient(90deg, rgba(0,153,204,var(--grid-opacity)) 1px, transparent 1px)`,
         backgroundSize: '60px 60px', pointerEvents: 'none',
       }} />
-      <div style={{ position: 'fixed', width: 650, height: 650, borderRadius: '50%', background: orb1bg, filter: 'blur(150px)', opacity: 'var(--orb1-opacity)', top: -200, right: -150, zIndex: 0, pointerEvents: 'none', transition: 'opacity 0.4s' }} />
-      <div style={{ position: 'fixed', width: 550, height: 550, borderRadius: '50%', background: orb2bg, filter: 'blur(140px)', opacity: 'var(--orb2-opacity)', bottom: -150, left: -100, zIndex: 0, pointerEvents: 'none', transition: 'opacity 0.4s' }} />
+     <div style={{ position: 'fixed', width: 650, height: 650, borderRadius: '50%', background: orb1bg, filter: 'blur(150px)', opacity: 'var(--orb1-opacity)', top: -200, right: -150, zIndex: 0, pointerEvents: 'none', animation: 'orbFloat1 12s ease-in-out infinite' }} />
+      <div style={{ position: 'fixed', width: 550, height: 550, borderRadius: '50%', background: orb2bg, filter: 'blur(140px)', opacity: 'var(--orb2-opacity)', bottom: -150, left: -100, zIndex: 0, pointerEvents: 'none', animation: 'orbFloat2 15s ease-in-out infinite' }} />
+      <div style={{ position: 'fixed', width: 400, height: 400, borderRadius: '50%', background: 'var(--accent3)', filter: 'blur(130px)', opacity: 0.03, top: '40%', left: '50%', zIndex: 0, pointerEvents: 'none', animation: 'orbFloat3 18s ease-in-out infinite' }} />
+      <div id="spotlight" style={{ position: 'fixed', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.07) 0%, rgba(0,153,204,0.03) 40%, transparent 70%)', pointerEvents: 'none', zIndex: 1, opacity: 0, transition: 'left 0.08s ease, top 0.08s ease, opacity 0.4s ease' }} />
 
       <Navbar />
 
@@ -633,6 +669,20 @@ export default function Home({ projects }: Props) {
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(28px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes orbFloat1 {
+          0%,100% { transform: translate(0, 0) scale(1); }
+          33%  { transform: translate(-40px, 30px) scale(1.05); }
+          66%  { transform: translate(30px, -20px) scale(0.96); }
+        }
+        @keyframes orbFloat2 {
+          0%,100% { transform: translate(0, 0) scale(1); }
+          33%  { transform: translate(30px, -40px) scale(1.04); }
+          66%  { transform: translate(-20px, 30px) scale(0.97); }
+        }
+        @keyframes orbFloat3 {
+          0%,100% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
+          50%  { transform: translate(-50%, -50%) scale(1.2); opacity: 0.055; }
         }
 
         /* Hero layout */
