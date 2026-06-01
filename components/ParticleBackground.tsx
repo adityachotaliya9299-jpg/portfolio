@@ -32,7 +32,7 @@ export default function ParticleBackground() {
     window.addEventListener('mousemove', onMouseMove);
 
     // Create particles
-    const count = Math.min(Math.floor(window.innerWidth / 7), 200);
+    const count = Math.min(Math.floor(window.innerWidth / 3), 600);
     for (let i = 0; i < count; i++) {
       const baseOpacity = 0.15 + Math.random() * 0.35;
       particles.push({
