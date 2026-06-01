@@ -263,10 +263,17 @@ export default function Home({ projects }: Props) {
 
       <ParticleBackground />
 
-      {/* Background grid */}
+      {/* Background grid — shows on all devices */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0,
         backgroundImage: `linear-gradient(rgba(0,153,204,var(--grid-opacity)) 1px, transparent 1px), linear-gradient(90deg, rgba(0,153,204,var(--grid-opacity)) 1px, transparent 1px)`,
         backgroundSize: '60px 60px', pointerEvents: 'none',
+      }} />
+      {/* Dot intersections on grid */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0,
+        backgroundImage: `radial-gradient(rgba(0,212,255,0.18) 1px, transparent 1px)`,
+        backgroundSize: '60px 60px',
+        backgroundPosition: '0 0',
+        pointerEvents: 'none',
       }} />
      <div style={{ position: 'fixed', width: 650, height: 650, borderRadius: '50%', background: orb1bg, filter: 'blur(150px)', opacity: 'var(--orb1-opacity)', top: -200, right: -150, zIndex: 0, pointerEvents: 'none', animation: 'orbFloat1 12s ease-in-out infinite' }} />
       <div style={{ position: 'fixed', width: 550, height: 550, borderRadius: '50%', background: orb2bg, filter: 'blur(140px)', opacity: 'var(--orb2-opacity)', bottom: -150, left: -100, zIndex: 0, pointerEvents: 'none', animation: 'orbFloat2 15s ease-in-out infinite' }} />
