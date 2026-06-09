@@ -321,7 +321,7 @@ export default function Home({ projects }: Props) {
                 </div>
 
                 <div style={{ display: 'flex', gap: 'clamp(1.5rem, 4vw, 2.5rem)', flexWrap: 'wrap' }}>
-                  {[['10+', 'Projects Live'], ['1+', 'Yrs Web3'], ['750+', 'Tests Written'], ['AIR 61', 'GATE 2026']].map(([n, l]) => (
+                  {[['15+', 'Projects Live'], ['2+', 'Yrs Web3'], ['1000+', 'Tests Written'], ['AIR 61', 'GATE 2026']].map(([n, l]) => (
                     <div key={l}>
                       <div style={{ fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>{n}</div>
                       <div className="mono" style={{ fontSize: '0.68rem', color: 'var(--text3)', letterSpacing: '0.08em', marginTop: 3 }}>{l}</div>
